@@ -1,0 +1,94 @@
+#include <stdio.h>
+#include <math.h>
+#include <string.h>
+#include <stdlib.h>
+
+
+int main()
+{
+	char str[13];			//최대9개의 문자열을 입력받아 저장하는 배열
+	char tmp[13];
+
+	char *str_1;
+	char *str_2;
+	char *str_3;
+
+	double num[3] = { 0, };	//입력으로 들어오는 숫자3개를 저장하는 배열
+	char sdt[3] = { 0, };
+	char bs[3] = { 0, };
+
+	int cnt = 0;
+	double totalpoint = 0;
+
+	int i;
+	//숫자분리
+	scanf("%s", str);
+	strcpy(tmp, str);
+
+	str_1 = strtok(tmp, "*#SDT");
+	num[0] = atoi(str_1);
+	
+	if (num[0] == 10) cnt += 2;
+	else cnt += 1;
+
+	if (str[cnt] == 'D') num[0] = pow(num[0], 2.0);
+	else if (str[cnt] == 'T') num[0] = pow(num[0], 3.0);
+	cnt++;
+	if (str[cnt] == '*')
+	{
+		num[0] *= 2;
+		cnt++;
+	}
+	else if (str[cnt] == '#')
+	{
+		num[0] = num[0] - num[0] * 2;
+		cnt++;
+	}
+
+	str_2 = strtok(NULL, "*#SDT");
+	num[1] = atoi(str_2);
+//	printf("%lf\n", num[1]);
+	if (num[1] == 10) cnt += 2;
+	else cnt += 1;
+	
+	if (str[cnt] == 'D') num[1] = pow(num[1], 2.0);
+	else if (str[cnt] == 'T') num[1] = pow(num[1], 3.0);
+	cnt++;
+	if (str[cnt] == '*')
+	{
+		num[0] *= 2;
+		num[1] *= 2;
+		cnt++;
+	}
+	else if (str[cnt] == '#')
+	{
+		num[1] = num[1] - num[1] * 2;
+		cnt++;
+	}
+
+
+	str_3 = strtok(NULL, "*#SDT");
+	num[2] = atoi(str_3);
+	//	printf("%lf\n", num[2]);
+	if (num[2] == 10) cnt += 2;
+	else cnt += 1;
+
+	if (str[cnt] == 'D') num[2] = pow(num[2], 2.0);
+	else if (str[cnt] == 'T') num[2] = pow(num[2], 3.0);
+	cnt++;
+	if (str[cnt] == '*')
+	{
+		num[1] *= 2;
+		num[2] *= 2;
+		cnt++;
+	}
+	else if (str[cnt] == '#')
+	{
+		num[2] = num[2] - num[2] * 2;
+		cnt++;
+	}
+	totalpoint = num[0] + num[1] + num[2];
+	printf("%lf\n", totalpoint);
+
+	return 0;
+}

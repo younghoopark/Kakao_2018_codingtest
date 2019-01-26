@@ -1,0 +1,82 @@
+#include <iostream>
+#include <algorithm>
+#include <deque>
+#include <array>
+
+using namespace std;
+
+int find(string str, deque<string> vstr)
+{
+	for (int i = 0; i < vstr.size(); i++)
+	{
+		if (vstr[i] == str) return i;
+	}
+	return -1;
+}
+
+void LRU(int n, string arr[], int num)
+{
+	int count = 0;
+	deque<string> cache;
+	
+	if (n == 0)
+	{
+		cout << num * 5 << endl;
+		return;
+	}
+	for (int i = 0; i < num; i++)
+	{
+		string str = arr[i];
+		for (int j = 0; j < arr[i].size(); j++)
+		{
+			str[j] = (str[j] >= 'a' && str[j] <= 'z') ? str[j] - 32 : str[j];		//대문자로 바꾸기
+		}
+		arr[i] = str;
+		int m = find(arr[i], cache);
+		
+		if (cache.size() < n && find(arr[i], cache) < 0)
+		{
+			count += 5;
+			cache.push_back(arr[i]);
+		}	//캐시 자리가 비어있을 경우(miss)
+		else if (m >= 0)
+		{
+			string temp = cache[m];
+			/*for (int k = m; k < n-1; k++)
+			{
+				cache[k] = cache[k+1];
+			}
+			cache.pop_back();
+			cache.push_back(temp);
+			*/
+			cache[m] = cache.back(); cache.pop_back();	
+			cache.push_back(temp);
+			count += 1;
+		}	//캐시 hit일 경우
+		else if (m < 0)
+		{
+			count += 5;
+			if (cache.size() != 0) cache.pop_front();
+			cache.push_back(arr[i]);
+		}
+	}
+	cout << count << endl;
+}
+
+int main()
+{
+	string arr1[10] = { "Jeju", "Pangyo", "Seoul", "NewYork", "LA", "Jeju", "Pangyo", "Seoul", "NewYork", "LA" };
+	string arr2[9] = { "Jeju", "Pangyo", "Seoul", "Jeju", "Pangyo", "Seoul", "Jeju", "Pangyo", "Seoul" };
+	string arr3[12] = { "Jeju", "Pangyo", "Seoul", "NewYork", "LA", "SanFrancisco", "Seoul", "Rome", "Paris", "Jeju", "NewYork", "Rome" };
+	string arr4[4] = { "Jeju", "Pangyo", "NewYork", "newyork" };
+	string arr5[5] = { "Jeju", "Pangyo", "Seoul", "NewYork", "LA" };
+	
+	LRU(3, arr1, sizeof(arr1) / sizeof(string));
+	LRU(3, arr2, sizeof(arr2) / sizeof(string));
+	LRU(2, arr3, sizeof(arr3) / sizeof(string));
+	LRU(5, arr3, sizeof(arr3) / sizeof(string));
+	LRU(2, arr4, sizeof(arr4) / sizeof(string));
+	LRU(0, arr5, sizeof(arr5) / sizeof(string));
+	
+	return 0;
+}
